@@ -2,101 +2,110 @@ set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
 source ~/.vimrc
 
- let s:using_snippets = 1
-
- " vim-plug: {{{
+" vim-plug: {{{
 call plug#begin('~/.vim/plugged')
 
- Plug 'OmniSharp/omnisharp-vim'
+Plug 'OmniSharp/omnisharp-vim'
 
- " Mappings, code-actions available flag and statusline integration
- Plug 'nickspoons/vim-sharpenup'
+" Mappings, code-actions available flag and statusline integration
+Plug 'nickspoons/vim-sharpenup'
 
- " Linting/error highlighting
- Plug 'dense-analysis/ale'
+" Linting/error highlighting
+Plug 'dense-analysis/ale'
 
- Plug 'mhinz/vim-startify'
+Plug 'mhinz/vim-startify'
 
- " Vim FZF integration, used as OmniSharp selector
- Plug 'junegunn/fzf'
- Plug 'junegunn/fzf.vim'
+" Vim FZF integration, used as OmniSharp selector
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 
- " Use release branch (recommend)
- Plug 'neoclide/coc.nvim', {'branch': 'release'}
- 
- " Or build from source code by using yarn: https://yarnpkg.com
- Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install -frozen-lockfile'}
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+"Plug 'nvim-telescope/telescope.nvim'
 
- " Autocompletion
- Plug 'prabirshrestha/asyncomplete.vim'
+" Use release branch (recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
- Plug 'preservim/nerdtree'
- Plug 'kien/ctrlp.vim'
+" Or build from source code by using yarn: https://yarnpkg.com
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install -frozen-lockfile'}
 
- Plug 'tpope/vim-surround'
- Plug 'majutsushi/tagbar' "f8
- Plug 'irrationalistic/vim-tasks'
- "n - new task below
- "N - new task above
- "d - toggle current task complete
- "x - toggle current task cancelled
- "a - send completed tasks to the archive
- "Run :help Tasks to view the full documentation.
- 
- "Plug 'codota/tabnine-vim'
- 
- 
- " Colorscheme
- Plug 'gruvbox-community/gruvbox'
+" Autocompletion
+Plug 'prabirshrestha/asyncomplete.vim'
 
- " Statusline
- Plug 'itchyny/lightline.vim'
+Plug 'preservim/nerdtree'
+"Plug 'kien/ctrlp.vim'
 
- Plug 'shinchu/lightline-gruvbox.vim'
- Plug 'maximbaz/lightline-ale'
+Plug 'tpope/vim-surround'
+Plug 'aserebryakov/vim-todo-lists'
 
- " Snippet support
- if s:using_snippets
-   Plug 'sirver/ultisnips'
-   endif
 
-  call plug#end()
+" Colorscheme
+Plug 'gruvbox-community/gruvbox'
+Plug 'arcticicestudio/nord-vim'
+Plug 'sainnhe/sonokai'
 
-    autocmd VimEnter *
-                \   if !argc()
-                \ |   Startify
-                \ |   NERDTree
-                \ |   wincmd w
-                \ | endif
+" Statusline
+Plug 'itchyny/lightline.vim'
+Plug 'shinchu/lightline-gruvbox.vim'
+Plug 'maximbaz/lightline-ale'
 
- inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
- inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
- let g:asyncomplete_auto_popup = 1
 
- function! s:check_back_space() abort
-	     let col = col('.') - 1
-	         return !col || getline('.')[col - 1]  =~ '\s'
-	 endfunction
+call plug#end()
 
-	 inoremap <silent><expr> <TAB>
-	   \ pumvisible() ? "\<C-n>" :
-	   \ <SID>check_back_space() ? "\<TAB>" :
-	   \ asyncomplete#force_refresh()
-	 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+autocmd VimEnter *
+	    \   if !argc()
+	    \ |   Startify
+	    \ |   NERDTree
+	    \ |   wincmd w
+	    \ | endif
 
- nnoremap <leader>n :NERDTreeFocus<CR>
- cd C:\Users\batuh\Desktop\Crazy_shop\Assets\Scripts
- nnoremap <C-n> :NERDTree<CR>
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
- set shiftwidth=4
- set number
+let g:asyncomplete_auto_popup = 1
 
- let g:lightline = {
-       \ 'colorscheme': 'one dark',
-       \ }
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-z> :NERDTree<CR>
 
- 
+set shiftwidth=4
+set number
 
- colorscheme gruvbox
-   " }}}
+let g:lightline = {
+   \ 'colorscheme': 'one dark',
+   \ }
 
+
+if has('termguicolors')
+set termguicolors
+endif
+
+let g:sonokai_style = 'andromeda'
+let g:sonokai_transparent_background = 0
+let g:airline_theme = 'sonokai'
+let g:lightline = {'colorscheme' : 'sonokai'}
+colorscheme sonokai
+let g:lightline.colorscheme = 'sonokai'
+
+noremap <A-h>  :-tabmove<cr>
+noremap <A-l> :+tabmove<cr>
+autocmd FileType cs nmap <silent> <buffer> <Leader>osnm <Plug>(omnisharp_rename)
+
+language en_US
+set mouse=a
+
+" OmniSharp: {{{
+let g:OmniSharp_popup_position = 'peek'
+if has('nvim')
+  let g:OmniSharp_popup_options = {
+  \ 'winhl': 'Normal:NormalFloat'
+  \}
+else
+  let g:OmniSharp_popup_options = {
+  \ 'highlight': 'Normal',
+  \ 'padding': [0, 0, 0, 0],
+  \ 'border': [1]
+  \}
+endif
+\}
+
+cd C:\Users\batuh\Desktop\Do_not_fall\Assets\Scripts
