@@ -15,6 +15,11 @@ Plug 'dense-analysis/ale'
 
 Plug 'mhinz/vim-startify'
 
+" Autocompletion
+Plug 'prabirshrestha/asyncomplete.vim'
+
+Plug 'davidosomething/vim-colors-meh'
+
 " Vim FZF integration, used as OmniSharp selector
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -22,12 +27,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 "Plug 'nvim-telescope/telescope.nvim'
-
-" Use release branch (recommend)
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-" Autocompletion
-Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'pbrisbin/vim-colors-off'
 
 Plug 'preservim/nerdtree'
 "Plug 'kien/ctrlp.vim'
@@ -35,6 +35,7 @@ Plug 'preservim/nerdtree'
 Plug 'tpope/vim-surround'
 Plug 'aserebryakov/vim-todo-lists'
 
+Plug 'preservim/nerdcommenter'
 
 " Colorscheme
 Plug 'gruvbox-community/gruvbox'
@@ -45,8 +46,10 @@ Plug 'sainnhe/sonokai'
 Plug 'itchyny/lightline.vim'
 Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'maximbaz/lightline-ale'
+Plug 'fxn/vim-monochrome'
 
 Plug 'vim-scripts/SingleCompile'
+
 nmap <F9> :SCCompile<cr>
 nmap <F10> :SCCompileRun<cr>
 
@@ -67,8 +70,21 @@ autocmd VimEnter *
 
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
 let g:asyncomplete_auto_popup = 1
+
+autocmd User asyncomplete_setup call asyncomplete#register_source(
+    \ asyncomplete#sources#clang#get_source_options())
+
+autocmd User asyncomplete_setup call asyncomplete#register_source(
+    \ asyncomplete#sources#clang#get_source_options({
+    \     'config': {
+    \         'clang_path': '/opt/llvm/bin/clang',
+    \         'clang_args': {
+    \             'default': ['-I/opt/llvm/include'],
+    \             'cpp': ['-std=c++11', '-I/opt/llvm/include']
+    \         }
+    \     }
+    \ }))
 
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-z> :NERDTree<CR>
@@ -77,7 +93,7 @@ set shiftwidth=4
 set number
 
 let g:lightline = {
-   \ 'colorscheme': 'one dark',
+   \ 'colorscheme': 'gruvbox',
    \ }
 
 
@@ -87,10 +103,10 @@ endif
 
 let g:sonokai_style = 'andromeda'
 let g:sonokai_transparent_background = 0
-let g:airline_theme = 'sonokai'
-let g:lightline = {'colorscheme' : 'sonokai'}
-colorscheme sonokai
-let g:lightline.colorscheme = 'sonokai'
+let g:airline_theme = 'nord'
+"let g:lightline = {'colorscheme' : 'nord'}
+colorscheme gruvbox
+"let g:lightline.colorscheme = 'nord'
 let g:OmniSharp_popup = 1
 
 noremap <A-h>  :-tabmove<cr>
@@ -100,7 +116,6 @@ autocmd FileType cs nmap <silent> <buffer> sd <Plug>(omnisharp_documentation)
 autocmd FileType cs nmap <silent> <buffer> gr <Plug>(omnisharp_rename)
 autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
 
-language en_US
 set mouse=a
 
 if has('patch-8.1.1880')
@@ -121,6 +136,10 @@ inoremap ü }
 inoremap Ü ]
 inoremap ö (
 inoremap ç )
+inoremap g g
+inoremap G G
+nnoremap L $
+nnoremap H 0
 
 " OmniSharp: {{{
 let g:OmniSharp_popup_position = 'peek'
@@ -135,3 +154,4 @@ else
   \ 'border': [1]
   \}
 endif
+
