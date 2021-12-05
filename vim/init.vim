@@ -18,7 +18,7 @@ Plug 'mhinz/vim-startify'
 " Autocompletion
 Plug 'prabirshrestha/asyncomplete.vim'
 
-Plug 'davidosomething/vim-colors-meh'
+Plug 'davidosomething/vim-colors-meh' " do the same for mac
 
 " Vim FZF integration, used as OmniSharp selector
 Plug 'junegunn/fzf'
@@ -26,8 +26,11 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
-"Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'pbrisbin/vim-colors-off'
+Plug 'w0ng/vim-hybrid'
+Plug 'tomlion/vim-solidity'
+Plug 'TovarishFin/vim-solidity'
 
 Plug 'preservim/nerdtree'
 "Plug 'kien/ctrlp.vim'
@@ -47,6 +50,13 @@ Plug 'itchyny/lightline.vim'
 Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'maximbaz/lightline-ale'
 Plug 'fxn/vim-monochrome'
+Plug 'sainnhe/everforest'
+
+" javascript
+
+Plug 'sheerun/vim-polyglot'
+
+" javascript
 
 Plug 'vim-scripts/SingleCompile'
 
@@ -54,6 +64,7 @@ nmap <F9> :SCCompile<cr>
 nmap <F10> :SCCompileRun<cr>
 
 let g:asyncrun_open = 6
+set laststatus=0
 
 
 call plug#end()
@@ -70,21 +81,7 @@ autocmd VimEnter *
 
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-let g:asyncomplete_auto_popup = 1
-
-autocmd User asyncomplete_setup call asyncomplete#register_source(
-    \ asyncomplete#sources#clang#get_source_options())
-
-autocmd User asyncomplete_setup call asyncomplete#register_source(
-    \ asyncomplete#sources#clang#get_source_options({
-    \     'config': {
-    \         'clang_path': '/opt/llvm/bin/clang',
-    \         'clang_args': {
-    \             'default': ['-I/opt/llvm/include'],
-    \             'cpp': ['-std=c++11', '-I/opt/llvm/include']
-    \         }
-    \     }
-    \ }))
+let g:asyncomplete_auto_popup = 0
 
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-z> :NERDTree<CR>
@@ -92,9 +89,9 @@ nnoremap <C-z> :NERDTree<CR>
 set shiftwidth=4
 set number
 
-let g:lightline = {
-   \ 'colorscheme': 'gruvbox',
-   \ }
+"let g:lightline = {
+"   \ 'colorscheme': 'gruvbox',
+"   \ }
 
 
 if has('termguicolors')
@@ -104,8 +101,8 @@ endif
 let g:sonokai_style = 'andromeda'
 let g:sonokai_transparent_background = 0
 let g:airline_theme = 'nord'
-"let g:lightline = {'colorscheme' : 'nord'}
-colorscheme gruvbox
+let g:lightline = {'colorscheme' : 'nord'}
+colorscheme meh
 "let g:lightline.colorscheme = 'nord'
 let g:OmniSharp_popup = 1
 
@@ -115,6 +112,7 @@ noremap <A-l> :+tabmove<cr>
 autocmd FileType cs nmap <silent> <buffer> sd <Plug>(omnisharp_documentation)
 autocmd FileType cs nmap <silent> <buffer> gr <Plug>(omnisharp_rename)
 autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
 
 set mouse=a
 
@@ -129,17 +127,6 @@ else
   " Set desired preview window height for viewing documentation.
   set previewheight=5
 endif
-
-inoremap ğ {
-inoremap Ğ [
-inoremap ü }
-inoremap Ü ]
-inoremap ö (
-inoremap ç )
-inoremap g g
-inoremap G G
-nnoremap L $
-nnoremap H 0
 
 " OmniSharp: {{{
 let g:OmniSharp_popup_position = 'peek'
