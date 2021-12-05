@@ -2,6 +2,8 @@ set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
 source ~/.vimrc
 
+language en_US
+
 " vim-plug: {{{
 call plug#begin('~/.vim/plugged')
 
@@ -25,12 +27,20 @@ Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
 Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
 Plug 'pbrisbin/vim-colors-off'
 Plug 'w0ng/vim-hybrid'
+
 Plug 'tomlion/vim-solidity'
 Plug 'TovarishFin/vim-solidity'
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+
+require('telescope').setup()
 
 Plug 'preservim/nerdtree'
 "Plug 'kien/ctrlp.vim'
@@ -57,6 +67,11 @@ Plug 'sainnhe/everforest'
 Plug 'sheerun/vim-polyglot'
 
 " javascript
+"
+use {
+  'nvim-telescope/telescope.nvim',
+  requires = { {'nvim-lua/plenary.nvim'} }
+}
 
 Plug 'vim-scripts/SingleCompile'
 
@@ -98,12 +113,7 @@ if has('termguicolors')
 set termguicolors
 endif
 
-let g:sonokai_style = 'andromeda'
-let g:sonokai_transparent_background = 0
-let g:airline_theme = 'nord'
-let g:lightline = {'colorscheme' : 'nord'}
 colorscheme meh
-"let g:lightline.colorscheme = 'nord'
 let g:OmniSharp_popup = 1
 
 noremap <A-h>  :-tabmove<cr>
@@ -141,4 +151,5 @@ else
   \ 'border': [1]
   \}
 endif
+
 
