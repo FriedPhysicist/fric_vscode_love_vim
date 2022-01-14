@@ -19,6 +19,7 @@ Plug 'mhinz/vim-startify'
 
 " Autocompletion
 Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'matze/vim-move'
 
 Plug 'davidosomething/vim-colors-meh' " do the same for mac
 
@@ -34,16 +35,9 @@ Plug 'tomlion/vim-solidity'
 Plug 'TovarishFin/vim-solidity'
 
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
 
-require('telescope').setup()
 
 Plug 'preservim/nerdtree'
-"Plug 'kien/ctrlp.vim'
 
 Plug 'tpope/vim-surround'
 Plug 'aserebryakov/vim-todo-lists'
@@ -52,8 +46,9 @@ Plug 'preservim/nerdcommenter'
 
 " Colorscheme
 Plug 'gruvbox-community/gruvbox'
-Plug 'arcticicestudio/nord-vim'
+Plug 'shaunsingh/nord.nvim'
 Plug 'sainnhe/sonokai'
+Plug 'dracula/vim', { 'as': 'dracula' }
 
 " Statusline
 Plug 'itchyny/lightline.vim'
@@ -61,18 +56,6 @@ Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'maximbaz/lightline-ale'
 Plug 'fxn/vim-monochrome'
 Plug 'sainnhe/everforest'
-
-" javascript
-
-Plug 'sheerun/vim-polyglot'
-
-" javascript
-"
-use {
-  'nvim-telescope/telescope.nvim',
-  requires = { {'nvim-lua/plenary.nvim'} }
-}
-
 Plug 'vim-scripts/SingleCompile'
 
 nmap <F9> :SCCompile<cr>
@@ -81,6 +64,8 @@ nmap <F10> :SCCompileRun<cr>
 let g:asyncrun_open = 6
 set laststatus=0
 
+let g:neovide_cursor_animation_length=0.05
+let g:neovide_cursor_trail_length=0.01
 
 call plug#end()
 
@@ -96,10 +81,17 @@ autocmd VimEnter *
 
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-let g:asyncomplete_auto_popup = 0
+let g:asyncomplete_auto_popup=0
 
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-z> :NERDTree<CR>
+
+autocmd FileType cs nmap <silent> <buffer> sd <Plug>(omnisharp_documentation)
+autocmd FileType cs nmap <silent> <buffer> gr <Plug>(omnisharp_rename)
+autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
+
+noremap <A-h>  :-tabmove<cr>
+noremap <A-l> :+tabmove<cr>
 
 set shiftwidth=4
 set number
@@ -113,16 +105,12 @@ if has('termguicolors')
 set termguicolors
 endif
 
-colorscheme meh
+colorscheme meh 
+"hi Normal guibg=NONE ctermbg=NONE
 let g:OmniSharp_popup = 1
 
-noremap <A-h>  :-tabmove<cr>
-noremap <A-l> :+tabmove<cr>
-
-autocmd FileType cs nmap <silent> <buffer> sd <Plug>(omnisharp_documentation)
-autocmd FileType cs nmap <silent> <buffer> gr <Plug>(omnisharp_rename)
-autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
+noremap <A-h> :-tabmove<cr>  
+noremap <A-l> :+tabmove<cr>   
 
 set mouse=a
 
