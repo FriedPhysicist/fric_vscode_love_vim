@@ -43,6 +43,7 @@ Plug 'tpope/vim-surround'
 Plug 'aserebryakov/vim-todo-lists'
 
 Plug 'preservim/nerdcommenter'
+Plug 'rust-lang/rust.vim'
 
 " Colorscheme
 Plug 'gruvbox-community/gruvbox'
@@ -95,6 +96,7 @@ noremap <A-l> :+tabmove<cr>
 
 set shiftwidth=4
 set number
+set relativenumber
 
 "let g:lightline = {
 "   \ 'colorscheme': 'gruvbox',
@@ -139,5 +141,3 @@ else
   \ 'border': [1]
   \}
 endif
-
-
