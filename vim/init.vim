@@ -107,8 +107,8 @@ if has('termguicolors')
 set termguicolors
 endif
 
-colorscheme meh 
-"hi Normal guibg=NONE ctermbg=NONE
+colorscheme gruvbox 
+hi Normal guibg=NONE ctermbg=NONE
 let g:OmniSharp_popup = 1
 
 noremap <A-h> :-tabmove<cr>  
@@ -141,3 +141,5 @@ else
   \ 'border': [1]
   \}
 endif
+
+
