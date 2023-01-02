@@ -1,6 +1,6 @@
-set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &packpath = &runtimepath
-source ~/.vimrc
+"set runtimepath^=~/.vim runtimepath+=~/.vim/after
+"let &packpath = &runtimepath
+"source ~/.vimrc
 
 language en_US
 
@@ -14,6 +14,7 @@ Plug 'nickspoons/vim-sharpenup'
 
 " Linting/error highlighting
 Plug 'dense-analysis/ale'
+Plug 'jhlgns/naysayer88.vim'
 
 Plug 'mhinz/vim-startify'
 
@@ -49,6 +50,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'gruvbox-community/gruvbox'
 Plug 'shaunsingh/nord.nvim'
 Plug 'sainnhe/sonokai'
+Plug 'ulwlu/elly.vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 
 " Statusline
@@ -89,12 +91,15 @@ nnoremap <C-z> :NERDTree<CR>
 
 autocmd FileType cs nmap <silent> <buffer> sd <Plug>(omnisharp_documentation)
 autocmd FileType cs nmap <silent> <buffer> gr <Plug>(omnisharp_rename)
+autocmd FileType cs nmap <silent> <buffer> fu <Plug>(omnisharp_find_usages)
 autocmd FileType cs nmap <silent> <buffer> gd <Plug>(omnisharp_go_to_definition)
 
 noremap <A-h>  :-tabmove<cr>
 noremap <A-l> :+tabmove<cr>
 
 set shiftwidth=4
+set noexpandtab
+set tabstop=4
 set number
 set relativenumber
 
@@ -107,8 +112,8 @@ if has('termguicolors')
 set termguicolors
 endif
 
-colorscheme gruvbox 
-hi Normal guibg=NONE ctermbg=NONE
+colorscheme gruvbox
+"hi Normal guibg=NONE ctermbg=NONE
 let g:OmniSharp_popup = 1
 
 noremap <A-h> :-tabmove<cr>  
@@ -141,5 +146,3 @@ else
   \ 'border': [1]
   \}
 endif
-
-
