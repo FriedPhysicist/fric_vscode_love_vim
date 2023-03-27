@@ -115,6 +115,8 @@ endif
 colorscheme gruvbox
 "hi Normal guibg=NONE ctermbg=NONE
 let g:OmniSharp_popup = 1
+let g:asyncomplete_auto_completeopt=1
+let g:asyncomplete_auto_popup=1
 
 noremap <A-h> :-tabmove<cr>  
 noremap <A-l> :+tabmove<cr>   
