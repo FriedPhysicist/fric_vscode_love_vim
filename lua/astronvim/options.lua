@@ -11,18 +11,18 @@ local options = astronvim.user_opts("options", {
     cmdheight = 0, -- hide command line unless needed
     completeopt = { "menu", "menuone", "noselect" }, -- Options for insert mode completion
     copyindent = true, -- copy the previous indentation on autoindenting
-    cursorline = true, -- highlight the text line of the cursor
+    cursorline = false, -- highlight the text line of the cursor
     expandtab = true, -- enable the use of space in tab
     fileencoding = "utf-8", -- file content encoding for the buffer
     fillchars = { eob = " " }, -- disable `~` on nonexistent lines
-    foldenable = true, -- enable fold for nvim-ufo
+    foldenable = false, -- enable fold for nvim-ufo
     foldlevel = 99, -- set high foldlevel for nvim-ufo
     foldlevelstart = 99, -- start with all code unfolded
     foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil, -- show foldcolumn in nvim 0.9
     history = 1000, -- number of commands to remember in a history table
     ignorecase = true, -- case insensitive searching
     infercase = true, -- infer cases in keyword completion
-    laststatus = 3, -- global statusline
+    laststatus = 0, -- global statusline
     linebreak = true, -- wrap lines at 'breakat'
     mouse = "a", -- enable mouse support
     number = true, -- show numberline
@@ -32,7 +32,7 @@ local options = astronvim.user_opts("options", {
     shiftwidth = 2, -- number of space inserted for indentation
     showmode = true, -- disable showing modes in command line
     showtabline = 2, -- always display tabline
-    signcolumn = "yes", -- always show the sign column
+    signcolumn = "no", -- always show the sign column
     smartcase = true, -- case sensitive searching
     splitbelow = true, -- splitting a new window below the current one
     splitright = true, -- splitting a new window at the right of the current one
@@ -54,9 +54,9 @@ local options = astronvim.user_opts("options", {
     autoformat_enabled = false, -- enable or disable auto formatting at start (lsp.formatting.format_on_save must be enabled)
     autopairs_enabled = false, -- enable autopairs at start
     cmp_enabled = true, -- enable completion at start
-    codelens_enabled = true, -- enable or disable automatic codelens refreshing for lsp that support it
-    diagnostics_mode = 2, -- set the visibility of diagnostics in the UI (0=off, 1=only show in status line, 2=virtual text off, 3=all on)
-    highlighturl_enabled = true, -- highlight URLs by default
+    codelens_enabled = false, -- enable or disable automatic codelens refreshing for lsp that support it
+    diagnostics_mode = 3, -- set the visibility of diagnostics in the UI (0=off, 1=only show in status line, 2=virtual text off, 3=all on)
+    highlighturl_enabled = false, -- highlight URLs by default
     icons_enabled = true, -- disable icons in the UI (disable if no nerd font is available)
     inlay_hints_enabled = true, -- enable or disable LSP inlay hints on startup (Neovim v0.10 only)
     lsp_handlers_enabled = true, -- enable or disable default vim.lsp.handlers (hover and signature help)
