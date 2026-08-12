@@ -326,3 +326,25 @@ require("lazy").setup({
 
 -- Colorscheme
 vim.cmd.colorscheme("gruvbox")
+
+-- yu: copy a "@<path> : <line>" reference ("start-end" for a range) to the clipboard
+local function yank_reference(line1, line2)
+  local path = vim.fn.expand("%:p")
+  local root = vim.fn.systemlist("git rev-parse --show-toplevel")[1] or vim.uv.cwd()
+  local rel = path
+  if root and path:sub(1, #root) == root then
+    rel = path:sub(#root + 2)
+  end
+  local range = line1 == line2 and tostring(line1) or (line1 .. "-" .. line2)
+  local text = string.format("@%s : %s", rel, range)
+  vim.fn.setreg("+", text)
+  vim.notify("Yanked: " .. text)
+end
+
+vim.keymap.set("n", "yu", function()
+  yank_reference(vim.fn.line("."), vim.fn.line("."))
+end)
+vim.keymap.set("v", "yu", function()
+  local a, b = vim.fn.line("'<"), vim.fn.line("'>")
+  yank_reference(math.min(a, b), math.max(a, b))
+end)
