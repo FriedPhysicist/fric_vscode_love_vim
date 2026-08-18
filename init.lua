@@ -35,6 +35,10 @@ vim.opt.hlsearch = true
 -- Esc clears search highlight
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
+-- Resize windows with Ctrl+, / Ctrl+. instead of Ctrl-w < / >
+vim.keymap.set("n", "<C-,>", "<cmd>vertical resize -1<CR>")
+vim.keymap.set("n", "<C-.>", "<cmd>vertical resize +1<CR>")
+
 -- Auto-reload files changed on disk (git pull, build scripts, etc.)
 vim.opt.autoread = true
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
@@ -164,7 +168,16 @@ require("lazy").setup({
         { "<leader>fb", "<cmd>FzfLua buffers<CR>", desc = "Buffers" },
         { "<leader>fh", "<cmd>FzfLua help_tags<CR>", desc = "Help tags" },
       },
-      opts = {},
+      opts = {
+        files = {
+          actions = {
+            -- open selected file in a new tab on Enter (like ctrl-t)
+            ["enter"] = function(selected, opts)
+              require("fzf-lua").actions.file_tabedit(selected, opts)
+            end,
+          },
+        },
+      },
     },
     -- Toggle comments on a line or visual selection (gc / gb)
     {
