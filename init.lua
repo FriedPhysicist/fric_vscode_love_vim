@@ -17,6 +17,8 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.mouse = "a"
+-- Wheel scroll amount per tick (default is ver:3,hor:6; prefix is "ver", not "vert")
+vim.opt.mousescroll = "ver:1,hor:6"
 -- Yank to / paste from system clipboard (needs wl-clipboard or xclip/xsel)
 vim.opt.clipboard = "unnamedplus"
 -- Middle click: paste the PRIMARY selection like a normal terminal.
@@ -153,6 +155,21 @@ require("lazy").setup({
           line_insert = "#454528", -- subtle green
           line_delete = "#522e2a", -- subtle red
         },
+      },
+    },
+    -- File explorer (sidebar tree)
+    {
+      "nvim-tree/nvim-tree.lua",
+      cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
+      keys = {
+        { "<leader>e", "<cmd>NvimTreeToggle<CR>", desc = "File explorer toggle" },
+        { "<leader>E", "<cmd>NvimTreeFindFile<CR>", desc = "File explorer (find file)" },
+      },
+      opts = {
+        sort_by = "case_sensitive",
+        view = { width = 30 },
+        renderer = { group_empty = true },
+        filters = { dotfiles = false },
       },
     },
     -- Fuzzy finder
@@ -358,6 +375,7 @@ vim.keymap.set("n", "yu", function()
   yank_reference(vim.fn.line("."), vim.fn.line("."))
 end)
 vim.keymap.set("v", "yu", function()
-  local a, b = vim.fn.line("'<"), vim.fn.line("'>")
+  -- during an active selection, '< / '> are not set yet; use v / . marks
+  local a, b = vim.fn.line("v"), vim.fn.line(".")
   yank_reference(math.min(a, b), math.max(a, b))
 end)
