@@ -150,6 +150,9 @@ require("lazy").setup({
         { "<leader>cd", "<cmd>CodeDiff<CR>", desc = "CodeDiff (open diff view)" },
       },
       opts = {
+        diff = {
+          layout = "inline",
+        },
         highlights = {
           -- dimmed tints of gruvbox green/red (defaults DiffAdd/DiffDelete are too bright)
           line_insert = "#454528", -- subtle green
