@@ -37,9 +37,9 @@ vim.opt.hlsearch = true
 -- Esc clears search highlight
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
--- Resize windows with Ctrl+, / Ctrl+. instead of Ctrl-w < / >
-vim.keymap.set("n", "<C-,>", "<cmd>vertical resize -1<CR>")
-vim.keymap.set("n", "<C-.>", "<cmd>vertical resize +1<CR>")
+-- Resize windows with , / . instead of Ctrl-w < / >
+vim.keymap.set("n", ",", "<cmd>vertical resize -5<CR>")
+vim.keymap.set("n", ".", "<cmd>vertical resize +5<CR>")
 
 -- Auto-reload files changed on disk (git pull, build scripts, etc.)
 vim.opt.autoread = true
@@ -73,7 +73,7 @@ function! LightlineDiagnostics() abort
 endfunction
 ]=], {})
 vim.g.lightline = {
-  colorscheme = "gruvbox",
+  colorscheme = "omni_dusk",
   component_function = {
     diagnostics = "LightlineDiagnostics",
   },
@@ -97,11 +97,40 @@ vim.api.nvim_create_autocmd("DiagnosticChanged", {
 require("lazy").setup({
   spec = {
     -- Colorscheme
-    { "morhetz/gruvbox", lazy = false, priority = 1000 },
-    -- Lightline statusline + gruvbox theme for it
-    -- Theme plugin loads first (priority 100) so its palette exists when lightline inits
-    { "shinchu/lightline-gruvbox.vim", lazy = false, priority = 100 },
-    { "itchyny/lightline.vim", lazy = false },
+    { "harshrajsachan/omni.nvim", lazy = false, priority = 1000 },
+    -- Lightline statusline + dusk palette
+    {
+      "itchyny/lightline.vim",
+      lazy = false,
+      config = function()
+        local p = require("omnitheme.palettes.omni-dusk")
+        vim.g["lightline#colorscheme#omni_dusk#palette"] = vim.fn["lightline#colorscheme#fill"]({
+          normal = {
+            left = { { p.bg, p.accent }, { p.fg, p.bg3 } },
+            middle = { { p.dim, p.bg1 } },
+            right = { { p.bg, p.accent }, { p.fg, p.bg3 } },
+            error = { { p.bg, p.error } },
+            warning = { { p.bg, p.warning } },
+          },
+          insert = { left = { { p.bg, p.cursor_insert }, { p.fg, p.bg3 } } },
+          visual = { left = { { p.bg, p.cursor_visual }, { p.fg, p.bg3 } } },
+          replace = { left = { { p.bg, p.cursor_replace }, { p.fg, p.bg3 } } },
+          inactive = {
+            left = { { p.dim, p.bg2 } },
+            middle = { { p.dim, p.bg1 } },
+            right = { { p.dim, p.bg2 } },
+          },
+          tabline = {
+            left = { { p.fg, p.bg2 } },
+            middle = { { p.dim, p.bg1 } },
+            right = { { p.bg, p.accent } },
+            tabsel = { { p.bg, p.accent } },
+          },
+        })
+        vim.fn["lightline#init"]()
+        vim.fn["lightline#colorscheme"]()
+      end,
+    },
     -- Start screen
     {
       "goolord/alpha-nvim",
@@ -136,28 +165,37 @@ require("lazy").setup({
         dashboard.section.buttons.opts.hl = "String"
 
         -- Footer
-        dashboard.section.footer.val = "gruvbox • neovim • lazy.nvim"
+        dashboard.section.footer.val = "omni dusk • neovim • lazy.nvim"
         dashboard.section.footer.opts.hl = "Comment"
 
         alpha.setup(dashboard.opts)
       end,
     },
-    -- VSCode-style diff view
+    -- Unified Git diff + history sidebar
     {
       "esmuellert/codediff.nvim",
       cmd = "CodeDiff",
       keys = {
-        { "<leader>cd", "<cmd>CodeDiff<CR>", desc = "CodeDiff (open diff view)" },
+        { "<leader>cd", "<cmd>CodeDiff<CR>", desc = "Git diff view" },
+        { "<leader>ch", function()
+          local path = vim.fn.expand("%:p")
+          if vim.fn.filereadable(path) == 1 then
+            vim.cmd("CodeDiff history HEAD " .. vim.fn.fnameescape(path))
+          else
+            vim.cmd("CodeDiff history")
+          end
+        end, desc = "Git file history" },
       },
       opts = {
-        diff = {
-          layout = "inline",
-        },
+        diff = { layout = "inline" },
         highlights = {
-          -- dimmed tints of gruvbox green/red (defaults DiffAdd/DiffDelete are too bright)
-          line_insert = "#454528", -- subtle green
-          line_delete = "#522e2a", -- subtle red
+          line_insert = "#354a2a",
+          line_delete = "#562e2e",
+          char_insert = "#4c6b35",
+          char_delete = "#803e3e",
         },
+        explorer = { position = "left" },
+        history = { position = "left" },
       },
     },
     -- File explorer (sidebar tree)
@@ -228,6 +266,27 @@ require("lazy").setup({
     {
       "neovim/nvim-lspconfig",
       config = function()
+        -- Keep Roslyn off scratch and virtual diff/history buffers.
+        local root_dir = vim.lsp.config.roslyn_ls.root_dir
+        vim.lsp.config("roslyn_ls", {
+          on_exit = function(code, signal)
+            if code == 0 and signal == 0 then
+              return
+            end
+            vim.defer_fn(function()
+              if vim.v.exiting == vim.NIL and vim.lsp.is_enabled("roslyn_ls") then
+                vim.lsp.enable("roslyn_ls")
+              end
+            end, 1000)
+          end,
+          root_dir = function(bufnr, on_dir)
+            local name = vim.api.nvim_buf_get_name(bufnr)
+            if vim.bo[bufnr].buftype ~= "" or name == "" or name:match("^%a[%w+.-]*://") then
+              return
+            end
+            root_dir(bufnr, on_dir)
+          end,
+        })
         -- Enable the C# server (config ships with lspconfig; binary from dotnet tool)
         vim.lsp.enable("roslyn_ls")
 
@@ -242,6 +301,7 @@ require("lazy").setup({
             vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
             vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
             vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+            vim.keymap.set("n", "<leader>fu", vim.lsp.buf.references, opts)
             vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
             vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
             vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
@@ -351,14 +411,14 @@ require("lazy").setup({
       opts = {},
     },
   },
-  install = { colorscheme = { "gruvbox" } },
+  install = { colorscheme = { "omni-dusk" } },
   checker = {
     enabled = false,   -- no automatic update checks
   },
 })
 
 -- Colorscheme
-vim.cmd.colorscheme("gruvbox")
+vim.cmd.colorscheme("omni-dusk")
 
 -- yu: copy a "@<path> : <line>" reference ("start-end" for a range) to the clipboard
 local function yank_reference(line1, line2)
