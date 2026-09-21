@@ -177,14 +177,7 @@ require("lazy").setup({
       cmd = "CodeDiff",
       keys = {
         { "<leader>cd", "<cmd>CodeDiff<CR>", desc = "Git diff view" },
-        { "<leader>ch", function()
-          local path = vim.fn.expand("%:p")
-          if vim.fn.filereadable(path) == 1 then
-            vim.cmd("CodeDiff history HEAD " .. vim.fn.fnameescape(path))
-          else
-            vim.cmd("CodeDiff history")
-          end
-        end, desc = "Git file history" },
+        { "<leader>ch", "<cmd>CodeDiff history<CR>", desc = "Git repository history" },
       },
       opts = {
         diff = { layout = "inline" },
