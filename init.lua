@@ -305,11 +305,11 @@ require("lazy").setup({
           end,
         })
 
-        -- no inline text, signs, or underlines: errors show only in the status bar
+        -- no inline text or signs; underline errors only
         vim.diagnostic.config({
           virtual_text = false,
           signs = false,
-          underline = false,
+          underline = { severity = vim.diagnostic.severity.ERROR },
           update_in_insert = false,
         })
       end,
