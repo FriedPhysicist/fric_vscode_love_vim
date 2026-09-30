@@ -59,8 +59,21 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
 })
 
 -- Lightline config must be set BEFORE plugins load (lightline caches it at init)
+function _G.LightlineTabFilename(n)
+  local lifecycle = package.loaded["codediff.ui.lifecycle"]
+  local session = lifecycle and lifecycle.get_session(vim.api.nvim_list_tabpages()[n])
+  if session then
+    return session.mode == "history" and "GitDiff-History" or "GitDiff"
+  end
+  return vim.fn["lightline#tab#filename"](n)
+end
+
 -- Status-bar diagnostics summary for the current buffer, e.g. "E2 W1"
 vim.api.nvim_exec2([=[
+function! LightlineTabFilename(n) abort
+  return v:lua.LightlineTabFilename(a:n)
+endfunction
+
 function! LightlineDiagnostics() abort
   let parts = []
   for [sev, prefix] in [[1, 'E'], [2, 'W'], [3, 'I'], [4, 'H']]
@@ -74,6 +87,9 @@ endfunction
 ]=], {})
 vim.g.lightline = {
   colorscheme = "omni_dusk",
+  tab_component_function = {
+    filename = "LightlineTabFilename",
+  },
   component_function = {
     diagnostics = "LightlineDiagnostics",
   },
